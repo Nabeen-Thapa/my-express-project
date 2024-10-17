@@ -22,7 +22,7 @@ loginRouter.post('/', async (req, res) => {
         // Check password
         const passwordMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordMatch) {
+        if (!passwordMatch && req.url === "/home") {
             return res.status(401).send('Invalid password');
         }else{
             res.redirect('/home');

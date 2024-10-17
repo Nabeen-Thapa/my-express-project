@@ -5,6 +5,7 @@ import { upload } from '../middleware/image_upload.js';
 import collection from './config.js';
 import bcrypt from 'bcrypt';
 import loginRouter from '../routers/login_route.js'; // Correct relative path
+import { logUserDetails } from '../utils/logger.js'; // Import the logging utility
 
 const app = express();
 const saltRounds = 10;
@@ -57,6 +58,9 @@ app.post('/register', upload.single('profileImage'), async (req, res) => {
         }
 
         await collection.create(userData);
+        // Log the user details to the log file after successful registration
+        logUserDetails(userData);
+
         res.status(201).send('<script>alert("User registered successfully"); window.location.href = "/";</script>');
     } catch (error) {
         console.error('Registration error:', error);

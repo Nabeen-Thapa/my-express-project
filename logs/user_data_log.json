@@ -1,0 +1,15 @@
+[
+  {
+    "name": "logger",
+    "fullName": "new logger",
+    "email": "new@logger.com",
+    "username": "loggers",
+    "password": "$2b$10$c4ZK8VHzSMaaKAp1kt95LOFaYLyEZpuQc/bhhjHG4.xmJxS/yFn9m",
+    "phone": "9876541232",
+    "age": "34",
+    "dateOfBirth": "2024-10-02",
+    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729165612558-483084803.png",
+    "gender": "male",
+    "timestamp": "2024-10-17T11:46:52.893Z"
+  }
+]
