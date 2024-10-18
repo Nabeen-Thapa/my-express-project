@@ -11,5 +11,18 @@
     "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729165612558-483084803.png",
     "gender": "male",
     "timestamp": "2024-10-17T11:46:52.893Z"
+  },
+  {
+    "name": "hari",
+    "fullName": "hari lal",
+    "email": "hari@lal.com",
+    "username": "hari",
+    "password": "$2b$10$i3iJPeLJ6hrwwUOzua0lne7giR2cEE2/hBHjdo4LZ8uY/.euPJSRS",
+    "phone": "9876543211",
+    "age": "30",
+    "dateOfBirth": "2024-10-01",
+    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729170865575-429214638.jpg",
+    "gender": "male",
+    "timestamp": "2024-10-17T13:14:25.998Z"
   }
 ]

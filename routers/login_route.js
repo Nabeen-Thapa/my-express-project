@@ -22,13 +22,15 @@ loginRouter.post('/', async (req, res) => {
         // Check password
         const passwordMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordMatch && req.url === "/home") {
+        if (!passwordMatch) {
             return res.status(401).send('Invalid password');
-        }else{
+        }
+        if(!user && !passwordMatch && req.url==='/home'){
+            return res.status(404).send('User not found');
+        }
+        else{
             res.redirect('/home');
         }
-
-
 
         // Redirect to home page on successful login
         

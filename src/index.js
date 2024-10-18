@@ -19,8 +19,6 @@ const __dirname = path.dirname(__filename);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, '../public')));
-
 app.get('/', (req, res) => {
     res.render('login');
 });
@@ -58,7 +56,7 @@ app.post('/register', upload.single('profileImage'), async (req, res) => {
         }
 
         await collection.create(userData);
-        // Log the user details to the log file after successful registration
+        // save user details to the log file after registration
         logUserDetails(userData);
 
         res.status(201).send('<script>alert("User registered successfully"); window.location.href = "/";</script>');

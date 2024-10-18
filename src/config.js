@@ -25,6 +25,8 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: { type: Date, default: null },
     profileImage: { type: String, default: null },
     gender: { type: String, required: true },
+    accessTOken: { type: String, default: null },
+    refreshTOken: { type: String, default: null },
     status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
 });
 userSchema.plugin(AutoIncrement, { inc_field: 'id' });
