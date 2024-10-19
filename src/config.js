@@ -30,7 +30,5 @@ const userSchema = new mongoose.Schema({
     status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
 });
 userSchema.plugin(AutoIncrement, { inc_field: 'id' });
-
 const collection = mongoose.model('user_details', userSchema);
-
 export default collection;

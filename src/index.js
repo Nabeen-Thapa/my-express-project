@@ -6,6 +6,7 @@ import collection from './config.js';
 import bcrypt from 'bcrypt';
 import loginRouter from './routers/login_route.js'; // Correct relative path
 import { logUserDetails } from './utils/logger.js'; // Import the logging utility
+import logger from './utils/logger.js'
 import { 
     sendUserExistsError, 
     sendInvalidRequestError, 
@@ -22,8 +23,20 @@ import Joi from 'joi';
 // import validation schema 
 import userSchema from './schemas/userSchema.js'; // Adjust the path if necessary
 
-
 const app = express();
+//to store image in cloudinary
+app.post('/upload', upload.single('profileImage'), (req, res) => {
+    try {
+        // req.file now contains Cloudinary details, including the URL of the uploaded image
+        const imageUrl = req.file.path; // Cloudinary stores the uploaded image's URL in req.file.path
+        res.json({ imageUrl: imageUrl, message: 'Image uploaded successfully!' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to upload image', details: error.message });
+    }
+});
+
+
+
 const saltRounds = 10;
 
 app.use(express.json());
@@ -97,5 +110,5 @@ app.get('/home', (req, res) => {
 
 let port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`App is running at port: ${port}`);
+    logger.info(`App is running at port: ${port}`);
 });

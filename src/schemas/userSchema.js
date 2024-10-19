@@ -11,7 +11,7 @@ const userSchema = Joi.object({
     age: Joi.number().integer().min(13).max(120).required(), // Assuming minimum age is 13
     dateOfBirth: Joi.date().optional(),
     profileImage: Joi.string().optional(),
-    gender: Joi.string().valid('Male', 'Female', 'Other').required() // Assuming specific options
+    gender: Joi.string().valid('Male', 'Female', 'Other').optional() // Assuming specific options
 });
 
 export default userSchema;
