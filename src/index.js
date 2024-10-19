@@ -1,11 +1,27 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { upload } from '../middleware/image_upload.js';
+import { upload } from './middleware/image_upload.js';
 import collection from './config.js';
 import bcrypt from 'bcrypt';
-import loginRouter from '../routers/login_route.js'; // Correct relative path
-import { logUserDetails } from '../utils/logger.js'; // Import the logging utility
+import loginRouter from './routers/login_route.js'; // Correct relative path
+import { logUserDetails } from './utils/logger.js'; // Import the logging utility
+import { 
+    sendUserExistsError, 
+    sendInvalidRequestError, 
+    sendInternalServerError, 
+    sendRegistrationSuccess, 
+    sendUnauthorizedError,
+    sendForbiddenError,
+    sendNotFoundError,
+    sendLogoutSuccess
+} from './helper_functions/helpers.js'; // Import helper functions
+
+import Joi from 'joi';
+
+// import validation schema 
+import userSchema from './schemas/userSchema.js'; // Adjust the path if necessary
+
 
 const app = express();
 const saltRounds = 10;
@@ -16,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.set('views', path.join(__dirname, '../views'));
+app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
@@ -29,6 +45,11 @@ app.get('/register', (req, res) => {
 
 app.post('/register', upload.single('profileImage'), async (req, res) => {
     try {
+
+        const { error } = userSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
         const userData = {
             name: req.body.name,
@@ -52,17 +73,17 @@ app.post('/register', upload.single('profileImage'), async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(400).send('User with this email, phone, or username already exists.');
+            return sendUserExistsError(res);
         }
-
         await collection.create(userData);
+
         // save user details to the log file after registration
         logUserDetails(userData);
 
-        res.status(201).send('<script>alert("User registered successfully"); window.location.href = "/";</script>');
+        return sendRegistrationSuccess(res);
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).send('Error registering user');
+        return sendInternalServerError(res); // Use helper function
     }
 });
 

@@ -24,5 +24,18 @@
     "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729170865575-429214638.jpg",
     "gender": "male",
     "timestamp": "2024-10-17T13:14:25.998Z"
+  },
+  {
+    "name": "login user",
+    "fullName": "login user",
+    "email": "login@user.com",
+    "username": "login",
+    "password": "$2b$10$bY5ywmjsyUVzr6LzZV6dRexRDlo2ty.F/jp1zRRqk.WdO2OBslbUG",
+    "phone": "9876543212",
+    "age": "74",
+    "dateOfBirth": "2024-10-08",
+    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729243055915-21735249.png",
+    "gender": "male",
+    "timestamp": "2024-10-18T09:17:36.278Z"
   }
 ]
