@@ -37,5 +37,17 @@
     "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729243055915-21735249.png",
     "gender": "male",
     "timestamp": "2024-10-18T09:17:36.278Z"
+  },
+  {
+    "name": "laxman",
+    "fullName": "laxman thapa",
+    "email": "laxman@thapa.com",
+    "username": "laxman",
+    "password": "$2b$10$wV9gV5p.etwJZ7DL92fFf.4eCo5iBozgBogcZlYu4NHHoFKFdI0iG",
+    "phone": "9870765423",
+    "age": "30",
+    "profileImage": "E:\\javascript learning\\my-express-project\\src\\uploads\\profileImage-1729397274730-630352061.png",
+    "gender": "Male",
+    "timestamp": "2024-10-20T04:07:55.063Z"
   }
 ]

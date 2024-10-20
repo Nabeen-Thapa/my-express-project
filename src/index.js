@@ -105,7 +105,8 @@ app.use('/login', loginRouter);
 
 // Route handler for home page
 app.get('/home', (req, res) => {
-    res.render('home'); // Render home.ejs from the views folder
+    res.json({message : "successfully loged in"})
+    //res.render('home'); // Render home.ejs from the views folder
 });
 
 let port = process.env.PORT || 3000;

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import jwt from 'jsonwebtoken';
 import collection from '../config.js'; // to accress connection
+import { refreshAccessToken } from '../auth/auth.js';
 const app = express();
 const loginRouter = express.Router();
 import { 
@@ -16,6 +17,7 @@ import {
     sendNotFoundError,
     sendLogoutSuccess
 } from '../helper_functions/helpers.js'; // Import helper functions
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -24,15 +26,14 @@ loginRouter.get('/', (req, res) => {
 });
 
 
-
-const refreshTokens = [];
+const refreshTokens = [];//store refrsh tokens
 // Function to generate access token
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
 
 //for the token
-app.post('/token', (req, res)=>{
+loginRouter.post('/token', (req, res)=>{
     const refreshToken = req.body.token
     if (refreshToken == null) return sendUnauthorizedError(res);
     if (!refreshTokens.includes(refreshToken)) return sendForbiddenError(res);
@@ -58,6 +59,19 @@ function authenticateToken(req, res, next) {
     });
 }
 
+//for logout
+loginRouter.post('/logout', (req, res) => {
+    const refreshToken = req.body.token; // Get token from request body
+    if (refreshToken == null) return sendUnauthorizedError(res);
+
+    // Remove the refresh token from the refreshTokens array
+    const index = refreshTokens.indexOf(refreshToken);
+    if (index > -1) {
+        refreshTokens.splice(index, 1); // Remove the token
+    }
+
+    res.json({ message: "Logout successful" });
+});
 //for the login
 loginRouter.post('/', async (req, res) => {
     const { username, password } = req.body;
@@ -78,13 +92,17 @@ loginRouter.post('/', async (req, res) => {
         }
         
         //res.redirect('/home');//redirect home page
-
+        
         //for jwt token
         const userLogin = {username: username , password : password};
         const accessToken = generateAccessToken(userLogin);
         const refreshToken = jwt.sign(userLogin, process.env.REFRESH_TOKEN_SECRET);
         refreshTokens.push(refreshToken);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken });
+        res.json({
+            message: "login successfully",
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        });
    
     } catch (error) {
         console.error('Login error:', error);
