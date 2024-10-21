@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { upload } from './middleware/image_upload.js';
-import collection from './config.js';
+import { collection,  collectionToken} from './config.js';
 import bcrypt from 'bcrypt';
 import loginRouter from './routers/login_route.js'; // Correct relative path
 import { logUserDetails } from './utils/logger.js'; // Import the logging utility

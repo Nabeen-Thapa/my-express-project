@@ -1,4 +1,4 @@
-// auth.js
+// auth.js to accress new accress token through refresh token
 export const refreshAccessToken = async (refreshToken) => {
     try {
         const response = await fetch('/login/token', {

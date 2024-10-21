@@ -1,53 +1,14 @@
 [
   {
-    "name": "logger",
-    "fullName": "new logger",
-    "email": "new@logger.com",
-    "username": "loggers",
-    "password": "$2b$10$c4ZK8VHzSMaaKAp1kt95LOFaYLyEZpuQc/bhhjHG4.xmJxS/yFn9m",
-    "phone": "9876541232",
-    "age": "34",
-    "dateOfBirth": "2024-10-02",
-    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729165612558-483084803.png",
-    "gender": "male",
-    "timestamp": "2024-10-17T11:46:52.893Z"
-  },
-  {
-    "name": "hari",
-    "fullName": "hari lal",
-    "email": "hari@lal.com",
-    "username": "hari",
-    "password": "$2b$10$i3iJPeLJ6hrwwUOzua0lne7giR2cEE2/hBHjdo4LZ8uY/.euPJSRS",
-    "phone": "9876543211",
-    "age": "30",
-    "dateOfBirth": "2024-10-01",
-    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729170865575-429214638.jpg",
-    "gender": "male",
-    "timestamp": "2024-10-17T13:14:25.998Z"
-  },
-  {
-    "name": "login user",
-    "fullName": "login user",
-    "email": "login@user.com",
-    "username": "login",
-    "password": "$2b$10$bY5ywmjsyUVzr6LzZV6dRexRDlo2ty.F/jp1zRRqk.WdO2OBslbUG",
-    "phone": "9876543212",
-    "age": "74",
-    "dateOfBirth": "2024-10-08",
-    "profileImage": "E:\\javascript learning\\my-express-project\\uploads\\profileImage-1729243055915-21735249.png",
-    "gender": "male",
-    "timestamp": "2024-10-18T09:17:36.278Z"
-  },
-  {
-    "name": "laxman",
-    "fullName": "laxman thapa",
-    "email": "laxman@thapa.com",
-    "username": "laxman",
-    "password": "$2b$10$wV9gV5p.etwJZ7DL92fFf.4eCo5iBozgBogcZlYu4NHHoFKFdI0iG",
-    "phone": "9870765423",
-    "age": "30",
-    "profileImage": "E:\\javascript learning\\my-express-project\\src\\uploads\\profileImage-1729397274730-630352061.png",
+    "name": "test user",
+    "fullName": "test user",
+    "email": "test@user1.com",
+    "username": "testuser1",
+    "password": "$2b$10$QH6FQWyZPDunrSUs64r4ROtjbmx35A7PkoNyqUfzc4yonhVobEvCa",
+    "phone": "9876111111",
+    "age": "59",
+    "profileImage": "E:\\javascript learning\\my-express-project\\src\\uploads\\profileImage-1729412165426-47237051.png",
     "gender": "Male",
-    "timestamp": "2024-10-20T04:07:55.063Z"
+    "timestamp": "2024-10-20T08:16:05.708Z"
   }
 ]

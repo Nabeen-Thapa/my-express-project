@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import jwt from 'jsonwebtoken';
-import collection from '../config.js'; // to accress connection
+import util from 'util';
+import { collection,  collectionToken} from '../config.js'; // to accress connection
 import { refreshAccessToken } from '../auth/auth.js';
 const app = express();
 const loginRouter = express.Router();
@@ -32,16 +33,35 @@ function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
 
-//for the token
-loginRouter.post('/token', (req, res)=>{
-    const refreshToken = req.body.token
+
+loginRouter.post('/token', async (req, res) => {
+    const refreshToken = req.body.token;
     if (refreshToken == null) return sendUnauthorizedError(res);
     if (!refreshTokens.includes(refreshToken)) return sendForbiddenError(res);
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user)=>{
-        if(err) return sendForbiddenError(res);
-        const accessToken = generateAccessToken({username :user.username});
-        res.json({accessToken :accessToken})
-    })
+    
+    // Convert jwt.verify into a promise
+    const verifyToken = util.promisify(jwt.verify);
+
+    try {
+        const user = await verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET); // Await the verification
+        const accessToken = generateAccessToken({ username: user.username });
+
+        const findToken = await collectionToken.findOne({ refreshToken: refreshToken });
+        if (!findToken) {
+            return sendNotFoundError(res);
+        }
+
+        findToken.accessToken = accessToken; // Ensure this field exists in your schema
+        await findToken.save();
+        res.json({ accessToken: accessToken });
+        
+    } catch (error) {
+        console.error('Error:', error);
+        if (error.name === 'JsonWebTokenError') {
+            return sendForbiddenError(res); // Handle token verification errors
+        }
+        return sendInternalServerError(res); // For other errors
+    }
 });
 
 
@@ -49,9 +69,7 @@ loginRouter.post('/token', (req, res)=>{
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
     if (token == null) return sendUnauthorizedError(res); // If token is missing
-    
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return sendForbiddenError(res); // If token is invalid
         req.user = user; // Store user info from token
@@ -72,25 +90,24 @@ loginRouter.post('/logout', (req, res) => {
 
     res.json({ message: "Logout successful" });
 });
+
+
 //for the login
 loginRouter.post('/', async (req, res) => {
     const { username, password } = req.body;
-
     try {
         // Find user by username
         const user = await collection.findOne({ username });
-
         if (!user) {
             return sendNotFoundError(res);
         }
-
         // Check password
         const passwordMatch = await bcrypt.compare(password, user.password);
-
         if (!passwordMatch) {
             return sendUnauthorizedError(res);
         }
-        
+
+
         //res.redirect('/home');//redirect home page
         
         //for jwt token
@@ -98,12 +115,26 @@ loginRouter.post('/', async (req, res) => {
         const accessToken = generateAccessToken(userLogin);
         const refreshToken = jwt.sign(userLogin, process.env.REFRESH_TOKEN_SECRET);
         refreshTokens.push(refreshToken);
+        const userTokens = {
+            accessToken:accessToken,
+            refreshToken : refreshToken 
+        }
+         const existToken = await collectionToken.findOne({username:user.username});
+        if(existToken){
+            existToken.accessToken = accessToken;
+            existToken.refreshToken = refreshToken;
+            await existToken.save();
+        }else {
+            await collectionToken.create(userTokens);
+        }
         res.json({
             message: "login successfully",
             accessToken: accessToken,
             refreshToken: refreshToken
         });
-   
+        
+
+
     } catch (error) {
         console.error('Login error:', error);
         return  sendInternalServerError(res);

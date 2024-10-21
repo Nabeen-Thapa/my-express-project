@@ -31,4 +31,14 @@ const userSchema = new mongoose.Schema({
 });
 userSchema.plugin(AutoIncrement, { inc_field: 'id' });
 const collection = mongoose.model('user_details', userSchema);
-export default collection;
+
+
+//to store user tokens
+const userTokenSchema = new mongoose.Schema({
+    accessToken: { type: String, required: true},
+    refreshToken: { type: String, required: true },
+    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
+});
+userTokenSchema.plugin(AutoIncrement, { inc_field: 'tokenId' });
+const collectionToken = mongoose.model('user_tokens', userTokenSchema);
+export { collection,  collectionToken};
