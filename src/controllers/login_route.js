@@ -6,7 +6,10 @@ import jwt from 'jsonwebtoken';
 import util from 'util';
 import { collection,  collectionToken} from '../config.js'; // to accress connection
 import { refreshAccessToken } from '../auth/auth.js';
+import { authenticateToken } from '../middleware/authenticate_token.js';
 const app = express();
+
+
 const loginRouter = express.Router();
 import { 
     sendUserExistsError, 
@@ -32,7 +35,7 @@ const refreshTokens = [];//store refrsh tokens
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
-
+//get new access token through refresh token
 loginRouter.post('/token', async (req, res) => {
     const refreshToken = req.body.token;
     if (refreshToken == null) return sendUnauthorizedError(res);
@@ -63,18 +66,6 @@ loginRouter.post('/token', async (req, res) => {
     }
 });
 
-
-// Middleware to authenticate token
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return sendUnauthorizedError(res); // If token is missing
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return sendForbiddenError(res); // If token is invalid
-        req.user = user; // Store user info from token
-        next(); // Continue to the next middleware or route handler
-    });
-}
 
 //for logout
 loginRouter.post('/logout',async (req, res) => {
@@ -132,9 +123,13 @@ loginRouter.post('/login', async (req, res) => {
         }
          const existUserId = await collectionToken.findOne({userId : userId});
         if(existUserId){
-            existUserId.accessToken = accessToken;
-            existUserId.refreshToken = refreshToken;
-            await existUserId.save();
+            // existUserId.accessToken = accessToken;
+            // existUserId.refreshToken = refreshToken;
+            // await existUserId.save();
+            return res.json({
+                message: "You are already logged in",
+            });
+
         }else {
             await collectionToken.create(userTokens);
         }
@@ -151,5 +146,7 @@ loginRouter.post('/login', async (req, res) => {
         return  sendInternalServerError(res);
     }
 });
+
+
 
 export default loginRouter;

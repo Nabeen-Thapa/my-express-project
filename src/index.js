@@ -6,6 +6,7 @@ import registeRoute from './controllers/userRegister.js'; // Corrected import
 import loginRouter from './controllers/login_route.js';
 import cloudImgRoute from './controllers/cloud_img_upload.js'; // Ensure this import is correct
 import logger from './utils/logger.js';
+import homeRute from './controllers/home_route.js';
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.get('/register', (req, res) => {
 app.use('/api', loginRouter);
 app.use('/api/register', registeRoute);
 app.use('/api', cloudImgRoute); // Include the cloud image upload route
-
+app.use('/api', homeRute);
 
 
 const port = process.env.PORT || 3000;
