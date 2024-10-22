@@ -6,7 +6,7 @@ export const refreshAccessToken = async (refreshToken) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ token: refreshToken }) // Use the actual refresh token variable here
+            body: JSON.stringify({ token: refreshToken }) 
         });
 
         if (!response.ok) {

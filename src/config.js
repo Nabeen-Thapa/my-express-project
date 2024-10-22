@@ -37,6 +37,7 @@ const collection = mongoose.model('user_details', userSchema);
 const userTokenSchema = new mongoose.Schema({
     accessToken: { type: String, required: true},
     refreshToken: { type: String, required: true },
+    userId :{type: Number, require : true},
     status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
 });
 userTokenSchema.plugin(AutoIncrement, { inc_field: 'tokenId' });

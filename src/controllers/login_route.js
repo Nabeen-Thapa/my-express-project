@@ -33,7 +33,6 @@ function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
 
-
 loginRouter.post('/token', async (req, res) => {
     const refreshToken = req.body.token;
     if (refreshToken == null) return sendUnauthorizedError(res);
@@ -78,9 +77,21 @@ function authenticateToken(req, res, next) {
 }
 
 //for logout
-loginRouter.post('/logout', (req, res) => {
+loginRouter.post('/logout',async (req, res) => {
     const refreshToken = req.body.token; // Get token from request body
     if (refreshToken == null) return sendUnauthorizedError(res);
+
+    //delete user token form collection after logout
+    const userTokenData = await collectionToken.findOne(({refreshToken}));
+    if (!userTokenData) {
+        return sendUnauthorizedError(res);
+    }
+    const userId = userTokenData.userId;
+   // Remove user data from the user collection
+   await collection.deleteOne({ _id: userId });
+
+   // Remove token data from the token collection
+   await collectionToken.deleteOne({ userId });
 
     // Remove the refresh token from the refreshTokens array
     const index = refreshTokens.indexOf(refreshToken);
@@ -93,7 +104,7 @@ loginRouter.post('/logout', (req, res) => {
 
 
 //for the login
-loginRouter.post('/', async (req, res) => {
+loginRouter.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         // Find user by username
@@ -106,8 +117,7 @@ loginRouter.post('/', async (req, res) => {
         if (!passwordMatch) {
             return sendUnauthorizedError(res);
         }
-
-
+       const userId = user.id;
         //res.redirect('/home');//redirect home page
         
         //for jwt token
@@ -117,7 +127,8 @@ loginRouter.post('/', async (req, res) => {
         refreshTokens.push(refreshToken);
         const userTokens = {
             accessToken:accessToken,
-            refreshToken : refreshToken 
+            refreshToken : refreshToken, 
+            userId :userId
         }
          const existToken = await collectionToken.findOne({username:user.username});
         if(existToken){
