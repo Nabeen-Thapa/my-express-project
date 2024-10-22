@@ -5,10 +5,10 @@ import userSchema from '../schemas/userSchema.js'; // Adjust the path as necessa
 import { collection } from '../config.js';
 import { upload } from '../middleware/image_upload.js';
 
-const router = express.Router();
+const registeRouter = express.Router();
 const saltRounds = 10;
 
-router.post('/', upload.single('profileImage'), async (req, res) => {
+registeRouter.post('/', upload.single('profileImage'), async (req, res) => {
     try {
         const { error } = userSchema.validate(req.body);
         if (error) {
@@ -24,7 +24,7 @@ router.post('/', upload.single('profileImage'), async (req, res) => {
             password: hashedPassword,
             phone: req.body.phone,
             age: req.body.age,
-            dateOfBirth: req.body.dob,
+            dateOfBirth: req.body.dateOfBirth,
             profileImage: req.file ? req.file.path : null,
             gender: req.body.gender
         };
@@ -41,11 +41,12 @@ router.post('/', upload.single('profileImage'), async (req, res) => {
             return res.status(400).json({ message: 'User already exists.' });
         }
 
-        await collection.insertOne(userData); // Insert the new user data
+        await collection.insertMany(userData); // Insert the new user data
         res.status(201).json({ message: 'User registered successfully.' });
     } catch (err) {
-        res.status(500).json({ message: 'Server error.' });
-    }
+    console.error('Registration error:', err); // Log the detailed error
+    res.status(500).json({ message: 'Server error.' });
+}
 });
 
-export default router;
+export default registeRouter;

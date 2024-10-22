@@ -43,9 +43,10 @@ import { createLogger, format, transports } from 'winston';
 
 const logger = createLogger({
     level: 'info',  // Set default log level (e.g., 'info', 'warn', 'error')
+    level1: 'error',
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),  // Timestamp format
-        format.printf(({ timestamp, level, message }) => {
+        format.printf(({ timestamp, level, message}) => {
             return `${timestamp} [${level.toUpperCase()}]: ${message}`;
         })
     ),

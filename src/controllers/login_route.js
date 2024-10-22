@@ -87,10 +87,10 @@ loginRouter.post('/logout',async (req, res) => {
         return sendUnauthorizedError(res);
     }
     const userId = userTokenData.userId;
-   // Remove user data from the user collection
-   await collection.deleteOne({ _id: userId });
+    // Remove user data from the user collection
+   //await collection.deleteOne({ id: userId });
 
-   // Remove token data from the token collection
+//    // Remove token data from the token collection
    await collectionToken.deleteOne({ userId });
 
     // Remove the refresh token from the refreshTokens array
@@ -130,11 +130,11 @@ loginRouter.post('/login', async (req, res) => {
             refreshToken : refreshToken, 
             userId :userId
         }
-         const existToken = await collectionToken.findOne({username:user.username});
-        if(existToken){
-            existToken.accessToken = accessToken;
-            existToken.refreshToken = refreshToken;
-            await existToken.save();
+         const existUserId = await collectionToken.findOne({userId : userId});
+        if(existUserId){
+            existUserId.accessToken = accessToken;
+            existUserId.refreshToken = refreshToken;
+            await existUserId.save();
         }else {
             await collectionToken.create(userTokens);
         }
