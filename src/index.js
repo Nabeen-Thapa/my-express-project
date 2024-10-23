@@ -7,6 +7,8 @@ import loginRouter from './controllers/login_route.js';
 import cloudImgRoute from './controllers/cloud_img_upload.js'; // Ensure this import is correct
 import logger from './utils/logger.js';
 import homeRute from './controllers/home_route.js';
+import logoutRouter from './controllers/logout_route.js';
+import getNewAccessToken from './controllers/get_new_accress_token.js';
 
 const app = express();
 
@@ -27,8 +29,10 @@ app.get('/register', (req, res) => {
 });
 // Define routes
 app.use('/api', loginRouter);
+app.use('/api', logoutRouter);
+app.use('/api', getNewAccessToken);
 app.use('/api/register', registeRoute);
-app.use('/api', cloudImgRoute); // Include the cloud image upload route
+app.use('/api', cloudImgRoute); 
 app.use('/api', homeRute);
 
 

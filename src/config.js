@@ -3,6 +3,7 @@ import AutoIncrementFactory from 'mongoose-sequence';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Connect to MongoDB
 const connectURL = process.env.mongourl || "mongodb://localhost:27017/user_ExpressDB";
 mongoose.connect(connectURL, {
     useNewUrlParser: true,
@@ -13,8 +14,12 @@ mongoose.connect(connectURL, {
     console.log('DB connection error:', error.message);
 });
 
-const AutoIncrement = AutoIncrementFactory(mongoose);
-const userSchema = new mongoose.Schema({
+// Initialize AutoIncrement using the mongoose connection
+const AutoIncrement = AutoIncrementFactory(mongoose.connection);
+
+// Define user schema
+const userSchema = new mongoose.Schema({ 
+    userId: { type: Number, unique: true }, // Ensure userId is here for auto-increment
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
@@ -25,21 +30,21 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: { type: Date, default: null },
     profileImage: { type: String, default: null },
     gender: { type: String, required: true },
-    accessTOken: { type: String, default: null },
-    refreshTOken: { type: String, default: null },
-    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
+    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'active' }
 });
-userSchema.plugin(AutoIncrement, { inc_field: 'id' });
-const collection = mongoose.model('user_details', userSchema);
 
+// Use mongoose-sequence to auto-increment userId
+userSchema.plugin(AutoIncrement, { inc_field: 'userId' });
+
+const collection = mongoose.model('user_details', userSchema);
 
 //to store user tokens
 const userTokenSchema = new mongoose.Schema({
     accessToken: { type: String, required: true},
     refreshToken: { type: String, required: true },
     userId :{type: Number, require : true},
-    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'unverified' },
+    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'active' },
 });
 userTokenSchema.plugin(AutoIncrement, { inc_field: 'tokenId' });
 const collectionToken = mongoose.model('user_tokens', userTokenSchema);
-export { collection,  collectionToken};
+export { collection, collectionToken };

@@ -35,63 +35,6 @@ const refreshTokens = [];//store refrsh tokens
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
-//get new access token through refresh token
-loginRouter.post('/token', async (req, res) => {
-    const refreshToken = req.body.token;
-    if (refreshToken == null) return sendUnauthorizedError(res);
-    if (!refreshTokens.includes(refreshToken)) return sendForbiddenError(res);
-    
-    // Convert jwt.verify into a promise
-    const verifyToken = util.promisify(jwt.verify);
-
-    try {
-        const user = await verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET); // Await the verification
-        const accessToken = generateAccessToken({ username: user.username });
-
-        const findToken = await collectionToken.findOne({ refreshToken: refreshToken });
-        if (!findToken) {
-            return sendNotFoundError(res);
-        }
-
-        findToken.accessToken = accessToken; // Ensure this field exists in your schema
-        await findToken.save();
-        res.json({ accessToken: accessToken });
-        
-    } catch (error) {
-        console.error('Error:', error);
-        if (error.name === 'JsonWebTokenError') {
-            return sendForbiddenError(res); // Handle token verification errors
-        }
-        return sendInternalServerError(res); // For other errors
-    }
-});
-
-
-//for logout
-loginRouter.post('/logout',async (req, res) => {
-    const refreshToken = req.body.token; // Get token from request body
-    if (refreshToken == null) return sendUnauthorizedError(res);
-
-    //delete user token form collection after logout
-    const userTokenData = await collectionToken.findOne(({refreshToken}));
-    if (!userTokenData) {
-        return sendUnauthorizedError(res);
-    }
-    const userId = userTokenData.userId;
-    // Remove user data from the user collection
-   //await collection.deleteOne({ id: userId });
-
-//    // Remove token data from the token collection
-   await collectionToken.deleteOne({ userId });
-
-    // Remove the refresh token from the refreshTokens array
-    const index = refreshTokens.indexOf(refreshToken);
-    if (index > -1) {
-        refreshTokens.splice(index, 1); // Remove the token
-    }
-
-    res.json({ message: "Logout successful" });
-});
 
 
 //for the login
@@ -108,7 +51,7 @@ loginRouter.post('/login', async (req, res) => {
         if (!passwordMatch) {
             return sendUnauthorizedError(res);
         }
-       const userId = user.id;
+       const userId = user.userId;
         //res.redirect('/home');//redirect home page
         
         //for jwt token
