@@ -1,58 +1,50 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
-import jwt from 'jsonwebtoken';
-import util from 'util';
-import { collection,  collectionToken} from '../config.js'; // to accress connection
-import { refreshAccessToken } from '../auth/auth.js';
-import { authenticateToken } from '../middleware/authenticate_token.js';
-const app = express();
+import { collectionToken } from '../config.js'; // Access token collection
 
-
-const logoutRouter = express.Router();
 import { 
-    sendUserExistsError, 
-    sendInvalidRequestError, 
-    sendInternalServerError, 
-    sendRegistrationSuccess, 
     sendUnauthorizedError,
-    sendForbiddenError,
-    sendNotFoundError,
-    sendLogoutSuccess
+    sendInternalServerError
 } from '../helper_functions/helpers.js'; // Import helper functions
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const logoutRouter = express.Router();
 
-logoutRouter.get('/', (req, res) => {
-    res.render('login'); // Render login form
+// Middleware to parse JSON and URL-encoded form data
+logoutRouter.use(express.json());
+logoutRouter.use(express.urlencoded({ extended: true }));
+
+// Logout route
+logoutRouter.post('/logout', async (req, res) => {
+    const refreshToken = req.body.token; // Expect the refresh token in the body
+    
+    // Check if the refresh token is provided
+    if (!refreshToken) return sendUnauthorizedError(res);
+
+    try {
+        // Check if the refresh token exists in the database
+        const userTokenData = await collectionToken.findOne({ refreshToken });
+        
+        if (!userTokenData) {
+            return sendUnauthorizedError(res); // Token not found, return unauthorized
+        }
+
+        const userId = userTokenData.userId;
+
+        // Remove token data from the token collection
+        await collectionToken.deleteOne({ userId });
+
+        // If you're using an array to store refresh tokens in memory, remove it from there too
+        // const index = refreshTokens.indexOf(refreshToken);
+        // if (index > -1) {
+        //     refreshTokens.splice(index, 1); // Remove the token from the array
+        // }
+
+        res.json({ message: "Logout successful" });
+    } catch (error) {
+        console.error('Error during logout:', error);
+        return sendInternalServerError(res); // Handle server errors
+    }
 });
 
-
-//for logout
-logoutRouter.post('/logout',async (req, res) => {
-    const refreshToken = req.body.token; // Get token from request body
-    if (refreshToken == null) return sendUnauthorizedError(res);
-
-    //delete user token form collection after logout
-    const userTokenData = await collectionToken.findOne(({refreshToken}));
-    if (!userTokenData) {
-        return sendUnauthorizedError(res);
-    }
-    const userId = userTokenData.userId;
-    // Remove user data from the user collection
-   //await collection.deleteOne({ id: userId });
-
-//    // Remove token data from the token collection
-   await collectionToken.deleteOne({ userId });
-
-    // Remove the refresh token from the refreshTokens array
-    const index = refreshTokens.indexOf(refreshToken);
-    if (index > -1) {
-        refreshTokens.splice(index, 1); // Remove the token
-    }
-
-    res.json({ message: "Logout successful" });
-});
 export default logoutRouter;
