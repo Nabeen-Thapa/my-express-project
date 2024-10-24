@@ -9,6 +9,7 @@ import logger from './utils/logger.js';
 import homeRute from './controllers/home_route.js';
 import logoutRouter from './controllers/logout_route.js';
 import getNewAccessToken from './controllers/get_new_accress_token.js';
+import forgetPassword from './controllers/forget_password.js';
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use('/api', getNewAccessToken);
 app.use('/api/register', registeRoute);
 app.use('/api', cloudImgRoute); 
 app.use('/api', homeRute);
+app.use('/api', forgetPassword);
 
 
 const port = process.env.PORT || 3000;

@@ -45,3 +45,7 @@ export const sendNotFoundError = (res) => {
 export const sendLogoutSuccess = (res) => {
     return sendResponse(res, 204, true, 'Logout successful.');
 };
+// Specific helper for email reset success
+export const emailSuccess = (res) => {
+    return sendResponse(res, 200, true, 'password reset.');
+};

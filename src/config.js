@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: { type: Date, default: null },
     profileImage: { type: String, default: null },
     gender: { type: String, required: true },
+    resetPasswordExpires: { type: Date },
     status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'active' }
 });
 
