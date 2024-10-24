@@ -1,0 +1,11 @@
+{
+  "name": "John",
+  "fullName": "John Doe",
+  "email": "johndoe@example.com",
+  "username": "john_doe",
+  "password": "$2b$10$hashOfPassword",
+  "phone": "+1234567890",
+  "age": 25,
+  "dateOfBirth": "1999-05-10",
+  "gender": "male"
+}

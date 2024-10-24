@@ -49,3 +49,12 @@ export const sendLogoutSuccess = (res) => {
 export const emailSuccess = (res) => {
     return sendResponse(res, 200, true, 'password reset.');
 };
+
+export const sendBadRequestError= (res) => {
+    return sendResponse(res,400, false, 'All fields are required');
+};
+
+
+export const sendSuccess = (res)=>{
+    return sendResponse(res,200, true, 'Password has been changed successfully');
+}
