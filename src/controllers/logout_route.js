@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
-import { collectionToken } from '../config.js'; // Access token collection
+import { collectionToken, redisClient } from '../config.js'; // Access token collection
 
 import { 
     sendUnauthorizedError,
@@ -22,6 +22,19 @@ logoutRouter.post('/logout', async (req, res) => {
     if (!refreshToken) return sendUnauthorizedError(res);
 
     try {
+        const userKeys = await redisClient.keys('user:*');
+        let redisUserId;
+        for(const key of userKeys){
+            const storedRefreshToken = await redisClient.hget(key, 'refreshTOken');
+            if(storedRefreshToken === refreshToken){
+                redisUserId = await redisClient.hget(key, 'userId');
+                await redisClient.del(key);
+                res.json({ message: "Logout successful from redis" });
+                break;
+            }
+        }
+
+
         // Check if the refresh token exists in the database
         const userTokenData = await collectionToken.findOne({ refreshToken });
         

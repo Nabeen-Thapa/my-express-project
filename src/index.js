@@ -11,6 +11,7 @@ import logoutRouter from './controllers/logout_route.js';
 import getNewAccessToken from './controllers/get_new_accress_token.js';
 import forgetPassword from './controllers/forget_password.js';
 import changePassword from './controllers/change_password.js';
+import viewRadisData from './controllers/view_radis_data.js';
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api', cloudImgRoute);
 app.use('/api', homeRute);
 app.use('/api', forgetPassword);
 app.use('/api', changePassword);
+app.use('/api', viewRadisData);
 
 
 const port = process.env.PORT || 3000;

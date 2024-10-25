@@ -20,9 +20,8 @@ async function generateUniqueOtp() {
     let otp;
     let userWithSameOtp;
 
-    // Keep generating a new OTP until we find one that is unique
     do {
-        otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6-digit number
+        otp = Math.floor(1000 + Math.random() * 9000).toString(); // Generate 4-digit number
         userWithSameOtp = await collection.findOne({ password: otp });
     } while (userWithSameOtp);
 
@@ -38,11 +37,11 @@ forgetPassword.post('/forget-password', async(req, res)=>{
             return sendNotFoundError(res);
         }
 
-         // Generate a unique 6-digit OTP
+         //4-digit OTP
          const otp = await generateUniqueOtp();
-        // Hash the OTP before storing it as a temporary password in the database
+        // Hash the OTP
         const hashedOtp = await bcrypt.hash(otp, 10);
-        //generate reset token with expire time
+        //opt expire time
         const tokenExpiration = Date.now() + 36000000;
 
         //update the user with reset token in database
@@ -74,6 +73,5 @@ forgetPassword.post('/forget-password', async(req, res)=>{
     return sendInternalServerError(res); // Send internal server error if something goes wrong
 }
 });
-
 
 export default forgetPassword;

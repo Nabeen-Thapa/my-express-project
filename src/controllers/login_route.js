@@ -4,11 +4,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 import jwt from 'jsonwebtoken';
 import util from 'util';
-import { collection,  collectionToken} from '../config.js'; // to accress connection
+import { collection,  collectionToken, redisClient} from '../config.js'; // to accress connection
 import { refreshAccessToken } from '../auth/auth.js';
 import { authenticateToken } from '../middleware/authenticate_token.js';
 const app = express();
 
+//add redis
 
 const loginRouter = express.Router();
 import { 
@@ -30,7 +31,6 @@ loginRouter.get('/', (req, res) => {
 });
 
 
-const refreshTokens = [];//store refrsh tokens
 // Function to generate access token
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
@@ -58,7 +58,17 @@ loginRouter.post('/login', async (req, res) => {
         const userLogin = {username: username , password : password};
         const accessToken = generateAccessToken(userLogin);
         const refreshToken = jwt.sign(userLogin, process.env.REFRESH_TOKEN_SECRET);
-        refreshTokens.push(refreshToken);
+        
+        const redisKey = `user:${userId}`;
+        await redisClient.hSet(redisKey,{
+            userId: userId,
+            username : `${user.username}`,
+             accessToken :accessToken,
+              refreshToken: refreshToken,
+        });
+        await redisClient.expire(redisKey, 60*60*24);//expire on 1 days
+
+
         const userTokens = {
             accessToken:accessToken,
             refreshToken : refreshToken, 

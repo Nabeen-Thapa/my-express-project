@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 import AutoIncrementFactory from 'mongoose-sequence';
 import dotenv from 'dotenv';
 dotenv.config();
+import { createClient } from 'redis';
+
+const redisClient = createClient();
+
+// Connect to the Redis server
+redisClient.connect().catch((error) => {
+    console.error('Redis connection error:', error);
+});
 
 // Connect to MongoDB
 const connectURL = process.env.mongourl || "mongodb://localhost:27017/user_ExpressDB";
@@ -48,4 +56,5 @@ const userTokenSchema = new mongoose.Schema({
 });
 userTokenSchema.plugin(AutoIncrement, { inc_field: 'tokenId' });
 const collectionToken = mongoose.model('user_tokens', userTokenSchema);
-export { collection, collectionToken };
+
+export { collection, collectionToken, redisClient };
