@@ -47,7 +47,7 @@ export const sendLogoutSuccess = (res) => {
 };
 // Specific helper for email reset success
 export const emailSuccess = (res) => {
-    return sendResponse(res, 200, true, 'password reset.');
+    return sendResponse(res, 200, true, 'password reset.check your email for the OTP');
 };
 
 export const sendBadRequestError= (res) => {

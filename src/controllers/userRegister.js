@@ -7,7 +7,7 @@ import { upload } from '../middleware/image_upload.js';
 const registeRouter = express.Router();
 const saltRounds = 10;
 
-registeRouter.post('/', upload.single('profileImage'), async (req, res) => {
+registeRouter.post('/register', upload.single('profileImage'), async (req, res) => {
     console.log('Request body:', req.body); //
     
     try {

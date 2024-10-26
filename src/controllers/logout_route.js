@@ -34,7 +34,6 @@ logoutRouter.post('/logout', async (req, res) => {
             }
         }
 
-
         // Check if the refresh token exists in the database
         const userTokenData = await collectionToken.findOne({ refreshToken });
         
@@ -46,12 +45,6 @@ logoutRouter.post('/logout', async (req, res) => {
 
         // Remove token data from the token collection
         await collectionToken.deleteOne({ userId });
-
-        // If you're using an array to store refresh tokens in memory, remove it from there too
-        // const index = refreshTokens.indexOf(refreshToken);
-        // if (index > -1) {
-        //     refreshTokens.splice(index, 1); // Remove the token from the array
-        // }
 
         res.json({ message: "Logout successful" });
     } catch (error) {

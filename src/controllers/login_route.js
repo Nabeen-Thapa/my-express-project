@@ -52,6 +52,7 @@ loginRouter.post('/login', async (req, res) => {
             return sendUnauthorizedError(res);
         }
        const userId = user.userId;
+       const userEmail = user.email;
         //res.redirect('/home');//redirect home page
         
         //for jwt token
@@ -62,6 +63,7 @@ loginRouter.post('/login', async (req, res) => {
         const redisKey = `user:${userId}`;
         await redisClient.hSet(redisKey,{
             userId: userId,
+            userEmail: userEmail,
             username : `${user.username}`,
              accessToken :accessToken,
               refreshToken: refreshToken,
@@ -72,13 +74,11 @@ loginRouter.post('/login', async (req, res) => {
         const userTokens = {
             accessToken:accessToken,
             refreshToken : refreshToken, 
+            userEmail :userEmail,
             userId :userId
         }
          const existUserId = await collectionToken.findOne({userId : userId});
         if(existUserId){
-            // existUserId.accessToken = accessToken;
-            // existUserId.refreshToken = refreshToken;
-            // await existUserId.save();
             return res.json({
                 message: "You are already logged in",
             });

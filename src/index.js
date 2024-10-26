@@ -2,9 +2,9 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import registeRoute from './controllers/userRegister.js'; // Corrected import
+import registeRoute from './controllers/userRegister.js';
 import loginRouter from './controllers/login_route.js';
-import cloudImgRoute from './controllers/cloud_img_upload.js'; // Ensure this import is correct
+import cloudImgRoute from './controllers/cloud_img_upload.js';
 import logger from './utils/logger.js';
 import homeRute from './controllers/home_route.js';
 import logoutRouter from './controllers/logout_route.js';
@@ -12,6 +12,9 @@ import getNewAccessToken from './controllers/get_new_accress_token.js';
 import forgetPassword from './controllers/forget_password.js';
 import changePassword from './controllers/change_password.js';
 import viewRadisData from './controllers/view_radis_data.js';
+import addBlog from './controllers/add_blog.js';
+import deleteBLog from './controllers/delete_blog.js';
+import viewBlog from './controllers/view_blog.js';
 
 const app = express();
 
@@ -34,13 +37,15 @@ app.get('/register', (req, res) => {
 app.use('/api', loginRouter);
 app.use('/api', logoutRouter);
 app.use('/api', getNewAccessToken);
-app.use('/api/register', registeRoute);
+app.use('/api', registeRoute);
 app.use('/api', cloudImgRoute); 
 app.use('/api', homeRute);
 app.use('/api', forgetPassword);
 app.use('/api', changePassword);
 app.use('/api', viewRadisData);
-
+app.use('/api', addBlog);
+app.use('/api', deleteBLog);
+app.use('/api', viewBlog);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

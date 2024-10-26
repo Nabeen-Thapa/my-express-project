@@ -52,9 +52,23 @@ const userTokenSchema = new mongoose.Schema({
     accessToken: { type: String, required: true},
     refreshToken: { type: String, required: true },
     userId :{type: Number, require : true},
+    userEmail: { type: String, required: true, unique: true },
     status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'active' },
 });
 userTokenSchema.plugin(AutoIncrement, { inc_field: 'tokenId' });
 const collectionToken = mongoose.model('user_tokens', userTokenSchema);
 
-export { collection, collectionToken, redisClient };
+//user post collsction
+const userPostSchema = new mongoose.Schema({
+    userEmail: { type: String, required: true},
+    postTitle: { type: String, required: true },
+    postDescription :{type: String, require : true},
+    status: { type: String, enum: ['unverified', 'active', 'blocked'], default: 'active' },
+});
+userPostSchema.plugin(AutoIncrement, { inc_field: 'postId' });
+const collectionPost = mongoose.model('user_blogs', userPostSchema);
+
+
+
+
+export { collection, collectionToken, redisClient, collectionPost };
