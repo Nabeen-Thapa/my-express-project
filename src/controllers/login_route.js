@@ -3,50 +3,43 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import jwt from 'jsonwebtoken';
-import util from 'util';
+import RedisStore from 'connect-redis';
+import session from 'express-session';
 import { collection,  collectionToken, redisClient} from '../config.js'; // to accress connection
-import { refreshAccessToken } from '../auth/auth.js';
-import { authenticateToken } from '../middleware/authenticate_token.js';
 const app = express();
 
 //add redis
 
 const loginRouter = express.Router();
 import { 
-    sendUserExistsError, 
-    sendInvalidRequestError, 
     sendInternalServerError, 
-    sendRegistrationSuccess, 
     sendUnauthorizedError,
-    sendForbiddenError,
-    sendNotFoundError,
-    sendLogoutSuccess
+    sendNotFoundError
 } from '../helper_functions/helpers.js'; // Import helper functions
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+
 loginRouter.get('/', (req, res) => {
     res.render('login'); // Render login form
 });
-
 
 // Function to generate access token
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' }); // Use expiresIn
 }
 
-
 //for the login
 loginRouter.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         // Find user by username
-        const user = await collection.findOne({ username });
+        const user = await collection.findOne({ username});
         if (!user) {
             return sendNotFoundError(res);
         }
-        // Check password
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return sendUnauthorizedError(res);
@@ -59,7 +52,16 @@ loginRouter.post('/login', async (req, res) => {
         const userLogin = {username: username , password : password};
         const accessToken = generateAccessToken(userLogin);
         const refreshToken = jwt.sign(userLogin, process.env.REFRESH_TOKEN_SECRET);
-        
+
+       
+        if (!req.session) {
+            return sendInternalServerError(res, "Session is unavailable");  // Handle session issues gracefully
+        }
+        //store data in session
+        req.session.userId = userId;
+        req.session.username = username;
+        req.session.userEmail = userEmail;
+
         const redisKey = `user:${userId}`;
         await redisClient.hSet(redisKey,{
             userId: userId,

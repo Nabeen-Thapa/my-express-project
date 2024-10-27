@@ -1,6 +1,8 @@
 // index.js
 import express from 'express';
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 import { fileURLToPath } from 'url';
 import registeRoute from './controllers/userRegister.js';
 import loginRouter from './controllers/login_route.js';
@@ -15,6 +17,10 @@ import viewRadisData from './controllers/view_radis_data.js';
 import addBlog from './controllers/add_blog.js';
 import deleteBLog from './controllers/delete_blog.js';
 import viewBlog from './controllers/view_blog.js';
+import sessionCheckRouter from './controllers/session_check.js';
+import session from 'express-session'; 
+import RedisStore from 'connect-redis'; 
+import { redisClient } from './config.js';
 
 const app = express();
 
@@ -29,10 +35,25 @@ const __dirname = path.dirname(__filename);
 // Set view engine and views directory
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/register', (req, res) => {
     res.render('register'); // Render login form
 });
+
+app.use(session({
+        store: new RedisStore({ client: redisClient }), // Use Redis for session storage
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { maxAge: 60 * 60 * 24 * 10 * 1000 }, // Expire session in 10 days
+    })
+);
+app.use((req, res, next) => {
+    console.log("Session Middleware Check:", req.session);
+    next();
+});
+
 // Define routes
 app.use('/api', loginRouter);
 app.use('/api', logoutRouter);
@@ -46,6 +67,7 @@ app.use('/api', viewRadisData);
 app.use('/api', addBlog);
 app.use('/api', deleteBLog);
 app.use('/api', viewBlog);
+app.use('/api', sessionCheckRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

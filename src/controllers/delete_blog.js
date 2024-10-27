@@ -35,7 +35,7 @@ deleteBLog.delete('/delete-blog', async (req, res) => {
             return sendNotFoundError(res, "email not found");
         }
         await collectionPost.deleteOne({ userEmail, postTitle });
-        return res.json("post deleted successfully");
+        return res.json({message :"post deleted successfully"});
     } catch (error) {
         console.error("Error in delete-blog route:", error);
         return sendInternalServerError(res, "Server error");

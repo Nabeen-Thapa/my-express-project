@@ -1,11 +1,12 @@
 {
-  "name": "John",
-  "fullName": "John Doe",
-  "email": "johndoe@example.com",
-  "username": "john_doe",
-  "password": "$2b$10$hashOfPassword",
-  "phone": "+1234567890",
+  "name": "Test User",
+  "fullName": "Test User",
+  "email": "testuser@example.com",
+  "username": "testuser",
+  "password": "testuser", 
+  "phone": "8984567890",
   "age": 25,
-  "dateOfBirth": "1999-05-10",
-  "gender": "male"
+  "dateOfBirth": "1999-10-27", 
+  "profileImage": null, 
+  "gender": "Female"
 }
