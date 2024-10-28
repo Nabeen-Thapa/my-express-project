@@ -6,7 +6,8 @@ import { collectionToken, redisClient } from '../config.js'; // Access token col
 
 import { 
     sendUnauthorizedError,
-    sendInternalServerError
+    sendInternalServerError,
+    logoutSuccess
 } from '../helper_functions/helpers.js'; // Import helper functions
 
 const logoutRouter = express.Router();
@@ -25,14 +26,25 @@ logoutRouter.post('/logout', async (req, res) => {
     try {
         const userKeys = await redisClient.keys('user:*');
         let redisUserId;
+        let redisKeyToDelete = null; 
         for(const key of userKeys){
             const storedRefreshToken = await redisClient.hGet(key, 'refreshTOken');
             if(storedRefreshToken === refreshToken){
                 redisUserId = await redisClient.hGet(key, 'userId');
-                await redisClient.del(key);
-                res.json({ message: "Logout successful from redis" });
-                break;
+                redisKeyToDelete = key;
+                break;  
             }
+        }
+         // Delete the Redis key if found
+         if (redisKeyToDelete) {
+            const delResult = await redisClient.del(redisKeyToDelete);
+            if (delResult) {
+                console.log(`Redis data for user ${redisUserId} removed successfully`);
+            } else {
+                console.log(`Failed to delete Redis data for user ${redisUserId}`);
+            }
+        } else {
+            console.log("No matching Redis key found for the provided token");
         }
 
         // Check if the refresh token exists in the database
@@ -53,10 +65,9 @@ logoutRouter.post('/logout', async (req, res) => {
                 return sendInternalServerError(res, "errror duirng session destruction");
             }
             res.clearCookie('connect.sid');
-            res.json({ message: "session destroy successful" });
-        })
-
-        res.json({ message: "Logout successful" });
+            console.log(`sessioon  data removed successfully`);
+            return logoutSuccess(res, "Successfully logged out");
+        });
     } catch (error) {
         console.error('Error during logout:', error);
         return sendInternalServerError(res); // Handle server errors

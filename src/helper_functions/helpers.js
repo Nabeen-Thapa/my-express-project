@@ -58,3 +58,8 @@ export const sendBadRequestError= (res) => {
 export const sendSuccess = (res)=>{
     return sendResponse(res,200, true, 'Password has been changed successfully');
 }
+
+
+export const logoutSuccess = (res) => {
+    return sendResponse(res, 200, true, 'Successfully logged out');
+};
