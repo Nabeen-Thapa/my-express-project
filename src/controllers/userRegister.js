@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import userSchema from '../schemas/userSchema.js'; 
 import { collection } from '../config.js';
 import { upload } from '../middleware/image_upload.js';
+import { sendInternalServerError, sendInvalidRequestError, sendRegistrationSuccess } from '../helper_functions/helpers.js';
 
 const registeRouter = express.Router();
 const saltRounds = 10;
@@ -46,17 +47,15 @@ registeRouter.post('/register', upload.single('profileImage'), async (req, res) 
         });
 
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists.' });
+            return sendInvalidRequestError(res);
         }
 
         // Insert new user
         await collection.create(userData);
-
-        res.status(201).json({ message: 'User registered successfully.' });
-
+        return sendRegistrationSuccess(res);
     } catch (err) {
         console.error('Registration error:', err);
-        res.status(500).json({ message: 'Server error.' });
+        return sendInternalServerError(res);
     }
 });
 

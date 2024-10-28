@@ -21,6 +21,7 @@ import sessionCheckRouter from './controllers/session_check.js';
 import session from 'express-session'; 
 import RedisStore from 'connect-redis'; 
 import { redisClient } from './config.js';
+import updateUser from './controllers/update_user.js';
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/api', cloudImgRoute);
 app.use('/api', homeRute);
 app.use('/api', forgetPassword);
 app.use('/api', changePassword);
+app.use('/api', updateUser);
 app.use('/api', viewRadisData);
 app.use('/api', addBlog);
 app.use('/api', deleteBLog);
