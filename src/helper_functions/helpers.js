@@ -23,7 +23,7 @@ export const sendInternalServerError = (res) => {
 
 // Specific helper for successful registration
 export const sendRegistrationSuccess = (res) => {
-    return sendResponse(res, 201, true, 'User registered successfully.');
+    return sendResponse(res, 201, true, 'User updated successfully.');
 };
 
 // Specific helper for unauthorized access

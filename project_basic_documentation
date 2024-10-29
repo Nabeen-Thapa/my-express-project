@@ -26,7 +26,7 @@ i have copmpletly make a express api using mongodb that:
 
     -to get new access token:
         type:  post,
-        url http://localhost:3000/login/token
+        url http://localhost:3000/api/token
         choose raw, json and
         enter in body:
         {
@@ -36,7 +36,7 @@ i have copmpletly make a express api using mongodb that:
 
     -Testing Protected Endpoints authorized or not:
         type: get
-        url : http://localhost:3000/home
+        url : http://localhost:3000/api/home
         go to header and add new key value:
             key: Authorization
             value : yourAccessToken
@@ -45,7 +45,7 @@ i have copmpletly make a express api using mongodb that:
     
     -logout:
     type: post
-    URL: http://localhost:3000/login/logout
+    URL: http://localhost:3000/api/logout
 
     select body, raw, json
     and enter in the body:
@@ -54,6 +54,36 @@ i have copmpletly make a express api using mongodb that:
         }
 
         it send logout successful message as response
+
+
+-forget password
+type :post
+url : http://localhost:3000/api/forget-password
+and in body part :
+{
+ "email" : "logged_in_user_email"
+}
+
+- change password
+type :post
+url : http://localhost:3000/api/change-password
+and in body part :
+{
+"email" : "logged_in_user_email",
+"oldPassword" : "users_old_passowrd",
+"newPassword" : "users_new_passowrd",
+"confirmPassword" : "users_new_passowrd_again"
+}
+
+for update detail
+method :PUT,
+url : http://localhost:3000/api/update-user
+and enter user detail in the body part
+
+for update post
+method : PUT,
+url : http://localhost:3000/api/update-post
+and enter post detail in the body part
 
     
 

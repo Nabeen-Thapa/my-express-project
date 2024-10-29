@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import userSchema from '../schemas/userSchema.js';
-import { collection } from '../config.js';
+import { collection, collectionToken } from '../config.js';
 import { upload } from '../middleware/image_upload.js';
 import { sendInternalServerError, sendInvalidRequestError, sendRegistrationSuccess, sendNotFoundError } from '../helper_functions/helpers.js';
 const updateUser = express.Router();
