@@ -22,6 +22,7 @@ import session from 'express-session';
 import RedisStore from 'connect-redis'; 
 import { redisClient } from './config.js';
 import updateUser from './controllers/update_user.js';
+import updatePost from './controllers/update_post.js';
 
 const app = express();
 
@@ -67,8 +68,9 @@ app.use('/api', changePassword);
 app.use('/api', updateUser);
 app.use('/api', viewRadisData);
 app.use('/api', addBlog);
-app.use('/api', deleteBLog);
 app.use('/api', viewBlog);
+app.use('/api', updatePost);
+app.use('/api', deleteBLog);
 app.use('/api', sessionCheckRouter);
 
 const port = process.env.PORT || 3000;

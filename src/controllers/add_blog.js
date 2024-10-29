@@ -4,6 +4,7 @@ import {
     sendUserExistsError,
     sendInvalidRequestError,
     sendInternalServerError,
+    sendBadRequestError,
     sendRegistrationSuccess,
     sendUnauthorizedError,
     sendForbiddenError,
@@ -17,10 +18,10 @@ addBlog.post('/add-blog', async (req, res) => {
     const { userEmail, postTitle, postDescription } = req.body;
 
     if (!userEmail) {
-        return res.status(400).json({ message: "userEmail is required" });
+        return  sendBadRequestError(res, "userEmail is required");
     }
     if (!postTitle || !postDescription) {
-        return res.status(400).json({ message: "postTitle and postDescription are required" });
+        return sendBadRequestError(res, "postTitle and postDescription are required");
     }
     //check with user_detail collection
     try {
@@ -46,7 +47,7 @@ addBlog.post('/add-blog', async (req, res) => {
 
     } catch (error) {
         console.error("Error in add-blog route:", error);
-        res.status(500).json({ message: "Server error" });
+        return sendInternalServerError(res);
     }
 });
 

@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import userSchema from '../schemas/userSchema.js';
 import { collection } from '../config.js';
 import { upload } from '../middleware/image_upload.js';
-import { sendInternalServerError, sendInvalidRequestError, sendRegistrationSuccess } from '../helper_functions/helpers.js';
+import { sendInternalServerError, sendInvalidRequestError, sendRegistrationSuccess, sendNotFoundError } from '../helper_functions/helpers.js';
 const updateUser = express.Router();
 
 
@@ -12,10 +12,17 @@ updateUser.put('/update-user', upload.single('profileImage'), async (req, res) =
 
     if (!name && !fullName && !email && !username && !password && !phone && !age && !dateOfBirth && !gender) return sendBadRequestError(res, "All fields are required -name, fullName, email, username, password, phone, age, dateOfBirth, gender");
     try {
-        const existUser = await collection.findOne({ email });
-        if (!existUser) {
-            return sendNotFoundError(res, "user not found, check the email");
-        } 
+            const userregister = await collection.findOne({email})
+            if(!userregister){
+                return res.json({message: "enterd email is not register, register first"});
+            }
+            const userLoggedIn = await collectionToken.findOne({userEmail :email})
+            if(!userLoggedIn){
+                return res.json({message: "not logged in, login first"});
+            }
+
+
+        
 
             const { error } = userSchema.validate(req.body);
             if (error) {
