@@ -2,14 +2,25 @@
 import express from 'express';
 import { upload } from '../middleware/image_upload.js';
 const router = express.Router();
-import cloudinary from 'cloudinary';
+import cloudinary from './middleware/cloudinary.js';
+import {
+    sendUserExistsError,
+    sendInvalidRequestError,
+    sendInternalServerError,
+    sendBadRequestError,
+    sendRegistrationSuccess,
+    sendUnauthorizedError,
+    sendForbiddenError,
+    sendNotFoundError,
+    sendLogoutSuccess
+} from '../helper_functions/helpers.js'
 
 // Endpoint to handle image upload
 router.post('/upload', upload.single('profileImage'),async  (req, res) => {
     try {
         // file was uploaded
         if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded.' });
+            return sendBadRequestError(res, 'No file uploaded.');
         }
 
         const result =  await cloudinary.uploader.upload(rey.file.path);
