@@ -1,17 +1,18 @@
 // controllers/cloud_img_upload.js
 import express from 'express';
-import { upload } from '../middleware/image_upload.js'; // Ensure this path is correct
-
+import { upload } from '../middleware/image_upload.js';
 const router = express.Router();
+import cloudinary from 'cloudinary';
 
 // Endpoint to handle image upload
-router.post('/upload', upload.single('profileImage'), (req, res) => {
+router.post('/upload', upload.single('profileImage'),async  (req, res) => {
     try {
-        // Check if the file was uploaded
+        // file was uploaded
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded.' });
         }
 
+        const result =  await cloudinary.uploader.upload(rey.file.path);
         // Cloudinary URL for the uploaded image
         const imageUrl = req.file.path;
         res.json({ imageUrl: imageUrl, message: 'Image uploaded successfully!' });
