@@ -5,10 +5,8 @@ dotenv.config();
 import jwt from 'jsonwebtoken';
 import RedisStore from 'connect-redis';
 import session from 'express-session';
-import { collection,  collectionToken, redisClient} from '../config.js'; // to accress connection
+import { collection,  collectionToken, redisClient} from '../config.js';
 const app = express();
-
-//add redis
 
 const loginRouter = express.Router();
 import { 
@@ -19,8 +17,6 @@ import {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
 
 loginRouter.get('/', (req, res) => {
     res.render('login'); // Render login form
@@ -46,7 +42,7 @@ loginRouter.post('/login', async (req, res) => {
         }
        const userId = user.userId;
        const userEmail = user.email;
-        //res.redirect('/home');//redirect home page
+        //res.redirect('/api/home');//redirect home page
         
         //for jwt token
         const userLogin = {username: username , password : password};

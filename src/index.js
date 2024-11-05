@@ -4,7 +4,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
 import { fileURLToPath } from 'url';
-import registeRoute from './controllers/userRegister.js';
+import registerRouter from './controllers/userRegister.js';
 import loginRouter from './controllers/login_route.js';
 import cloudImgRoute from './controllers/cloud_img_upload.js';
 import logger from './utils/logger.js';
@@ -39,6 +39,10 @@ app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', (req, res) => {
+    res.render('login'); // Render login form
+});
+
 app.get('/register', (req, res) => {
     res.render('register'); // Render login form
 });
@@ -60,7 +64,7 @@ app.use((req, res, next) => {
 app.use('/api', loginRouter);
 app.use('/api', logoutRouter);
 app.use('/api', getNewAccessToken);
-app.use('/api', registeRoute);
+app.use('/api', registerRouter);
 app.use('/api', cloudImgRoute); 
 app.use('/api', homeRute);
 app.use('/api', forgetPassword);

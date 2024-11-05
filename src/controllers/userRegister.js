@@ -1,16 +1,25 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
+import path from 'path';
 import userSchema from '../schemas/userSchema.js'; 
 import { collection } from '../config.js';
 import { upload } from '../middleware/image_upload.js';
 import { sendInternalServerError, sendInvalidRequestError, sendRegistrationSuccess } from '../helper_functions/helpers.js';
-
-const registeRouter = express.Router();
+const app = express();
+const registerRouter = express.Router();
 const saltRounds = 10;
 
-registeRouter.post('/register', upload.single('profileImage'), async (req, res) => {
-    console.log('Request body:', req.body); //
-    
+// import { fileURLToPath } from 'url';
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+// app.set('views', path.join(__dirname, '../views'));
+// app.set('view engine', 'ejs');
+
+
+registerRouter.post('/register', upload.single('profileImage'), async (req, res) => {
+   
+    console.log('Request body:', req.body); 
+    console.log('Uploaded file:', req.file);
     try {
         // Validate input against schema
         const { error } = userSchema.validate(req.body);
@@ -51,8 +60,9 @@ registeRouter.post('/register', upload.single('profileImage'), async (req, res) 
         }
 
         // Insert new user
-        await collection.create(userData);
-        return sendRegistrationSuccess(res);
+         await collection.create(userData);
+         //return sendRegistrationSuccess(res);
+        return res.status(201).json({ message: 'Registration successful' }); 
     } catch (err) {
         console.error('Registration error:', err);
         return sendInternalServerError(res);
@@ -60,4 +70,4 @@ registeRouter.post('/register', upload.single('profileImage'), async (req, res) 
 });
 
 
-export default registeRouter;
+export default registerRouter;
