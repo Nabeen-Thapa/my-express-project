@@ -18,7 +18,7 @@ logoutRouter.use(express.urlencoded({ extended: true }));
 
 // Logout route
 logoutRouter.post('/logout', async (req, res) => {
-    const refreshToken = req.body.token; // Expect the refresh token in the body
+    const refreshToken = req.body.token; 
     
     // Check if the refresh token is provided
     if (!refreshToken) return sendUnauthorizedError(res);

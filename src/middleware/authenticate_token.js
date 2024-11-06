@@ -1,15 +1,7 @@
 
 import jwt from 'jsonwebtoken';
-import { 
-    sendUserExistsError, 
-    sendInvalidRequestError, 
-    sendInternalServerError, 
-    sendRegistrationSuccess, 
-    sendUnauthorizedError,
-    sendForbiddenError,
-    sendNotFoundError,
-    sendLogoutSuccess
-} from '../helper_functions/helpers.js';
+import {sendUnauthorizedError, sendForbiddenError } from '../helper_functions/helpers.js';
+
 // Middleware to authenticate token
 export const  authenticateToken =(req, res, next)=> {
     const authHeader = req.headers['authorization'];

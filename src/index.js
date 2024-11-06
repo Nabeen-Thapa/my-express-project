@@ -37,14 +37,17 @@ const __dirname = path.dirname(__filename);
 // Set view engine and views directory
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.render('login'); // Render login form
 });
 
 app.get('/register', (req, res) => {
-    res.render('register'); // Render login form
+    res.render('register'); // Render register form
+});
+
+app.get('/home', (req, res) => {
+    res.render('home'); // Render home form
 });
 
 app.use(session({

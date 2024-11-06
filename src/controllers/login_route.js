@@ -18,9 +18,6 @@ import {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-loginRouter.get('/', (req, res) => {
-    res.render('login'); // Render login form
-});
 
 // Function to generate access token
 function generateAccessToken(user) {
@@ -66,7 +63,7 @@ loginRouter.post('/login', async (req, res) => {
              accessToken :accessToken,
               refreshToken: refreshToken,
         });
-        await redisClient.expire(redisKey, 60*60*24);//expire on 1 days
+        await redisClient.expire(redisKey, 60*60*24*365);//expire on 1 days
 
 
         const userTokens = {
@@ -84,20 +81,19 @@ loginRouter.post('/login', async (req, res) => {
         }else {
             await collectionToken.create(userTokens);
         }
-        res.json({
-            message: "login successfully",
-            accessToken: accessToken,
-            refreshToken: refreshToken
-        });
+        // res.json({
+        //     message: "login successfully",
+        //     accessToken: accessToken,
+        //     refreshToken: refreshToken,
+        //     redirectUrl: '/api/home'
+        // });
+
+        return res.redirect('/api/home');
         
-
-
     } catch (error) {
         console.error('Login error:', error);
         return  sendInternalServerError(res);
     }
 });
-
-
 
 export default loginRouter;

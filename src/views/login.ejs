@@ -45,7 +45,7 @@
 <body>
     <div class="container">
         <h3 class="text-center mb-4">Login</h3>
-        <form action="/api/login" method="post">
+        <form action="/api/login" method="post" id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
@@ -58,6 +58,33 @@
         </form>
         <p>Not registered yet? <a href="register">Register here</a></p>
     </div>
-   
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.redirectUrl) {
+                    window.location.href = data.redirectUrl; // Redirect to the specified URL
+                } else {
+                    alert(data.message || "Login failed");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>     
 </body>
 </html>
