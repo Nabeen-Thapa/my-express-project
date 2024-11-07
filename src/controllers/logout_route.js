@@ -67,6 +67,7 @@ logoutRouter.post('/logout', async (req, res) => {
             res.clearCookie('connect.sid');
             console.log(`sessioon  data removed successfully`);
             return logoutSuccess(res, "Successfully logged out");
+            
         });
     } catch (error) {
         console.error('Error during logout:', error);

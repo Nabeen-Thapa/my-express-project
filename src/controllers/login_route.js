@@ -88,7 +88,10 @@ loginRouter.post('/login', async (req, res) => {
         //     redirectUrl: '/api/home'
         // });
 
-        return res.redirect('/api/home');
+        return res.json({
+            message: "Login successful",
+            redirectUrl: '/home' // Redirect to /home after successful login
+        });
         
     } catch (error) {
         console.error('Login error:', error);

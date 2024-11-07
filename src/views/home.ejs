@@ -8,8 +8,9 @@
 <body>
     <h1>Welcome to the Home Page!</h1>
     <p>You are successfully logged in.</p>
-    <a href="/">Logout</a> <!-- Add logout functionality if needed -->
-
-    
+    <!-- <button id="logoutBtn">Logout</button> Add logout functionality if needed -->
+     <form action="/api/logout" method="post">
+        <button type="submit" class="btn submit-btn">Logout</button>
+     </form>
 </body>
 </html>
