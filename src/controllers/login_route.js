@@ -7,13 +7,8 @@ import RedisStore from 'connect-redis';
 import session from 'express-session';
 import { collection,  collectionToken, redisClient} from '../config.js';
 const app = express();
-
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 const loginRouter = express.Router();
-import { 
-    sendInternalServerError, 
-    sendUnauthorizedError,
-    sendNotFoundError
-} from '../helper_functions/helpers.js'; // Import helper functions
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,11 +26,13 @@ loginRouter.post('/login', async (req, res) => {
         // Find user by username
         const user = await collection.findOne({ username});
         if (!user) {
-            return sendNotFoundError(res);
+           // return sendNotFoundError(res);
+           return res.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
         }
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return sendUnauthorizedError(res);
+            //return sendUnauthorizedError(res);
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: ReasonPhrases.UNAUTHORIZED });
         }
        const userId = user.userId;
        const userEmail = user.email;
@@ -48,7 +45,8 @@ loginRouter.post('/login', async (req, res) => {
 
        
         if (!req.session) {
-            return sendInternalServerError(res, "Session is unavailable");  // Handle session issues gracefully
+            //return sendInternalServerError(res, "Session is unavailable");  // Handle session issues gracefully
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Session is unavailable" });
         }
         //store data in session
         req.session.userId = userId;
@@ -74,28 +72,24 @@ loginRouter.post('/login', async (req, res) => {
         }
          const existUserId = await collectionToken.findOne({userId : userId});
         if(existUserId){
-            return res.json({
-                message: "You are already logged in",
-            });
-
+            // return res.json({
+            //     message: "You are already logged in",
+            // });
+            return res.status(StatusCodes.OK).json({ message: "You are already logged in" });
         }else {
             await collectionToken.create(userTokens);
         }
-        // res.json({
-        //     message: "login successfully",
-        //     accessToken: accessToken,
-        //     refreshToken: refreshToken,
-        //     redirectUrl: '/api/home'
-        // });
-
-        return res.json({
-            message: "Login successful",
-            redirectUrl: '/home' // Redirect to /home after successful login
+        res.json({
+            message: "login successfully",
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            redirectUrl: '/api/home'
         });
         
     } catch (error) {
         console.error('Login error:', error);
-        return  sendInternalServerError(res);
+        //return  sendInternalServerError(res);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
     }
 });
 

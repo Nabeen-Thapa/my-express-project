@@ -29,6 +29,7 @@ addBlog.post('/add-blog', async (req, res) => {
         if (userdata.length === 0) {
             return sendInvalidRequestError(res, "User not registered yet. Please register first.");
         }
+        
         //ckeck with user_TOken collction
         const userTokenData = await collectionToken.find({ userEmail });
         if (userTokenData.length === 0) {

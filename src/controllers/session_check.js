@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import session from 'express-session';
-
-
 const app = express();
 const sessionCheckRouter = express.Router();
 import { 

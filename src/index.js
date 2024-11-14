@@ -64,14 +64,14 @@ app.use((req, res, next) => {
 });
 
 // Define routes
+app.use('/api', registerRouter);
 app.use('/api', loginRouter);
 app.use('/api', logoutRouter);
-app.use('/api', getNewAccessToken);
-app.use('/api', registerRouter);
-app.use('/api', cloudImgRoute); 
-app.use('/api', homeRute);
-app.use('/api', forgetPassword);
 app.use('/api', changePassword);
+app.use('/api', forgetPassword);
+app.use('/api', homeRute);
+app.use('/api', getNewAccessToken);
+app.use('/api', cloudImgRoute); 
 app.use('/api', updateUser);
 app.use('/api', viewRadisData);
 app.use('/api', addBlog);
@@ -80,7 +80,7 @@ app.use('/api', updatePost);
 app.use('/api', deleteBLog);
 app.use('/api', sessionCheckRouter);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;//create a function to check .env inportant posts
 app.listen(port, () => {
     logger.info(`App is running at port: ${port}`);
 });

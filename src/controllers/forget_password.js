@@ -3,6 +3,7 @@ const forgetPassword = express.Router();
 import nodeMailer from 'nodemailer';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt'; 
+import { authenticator } from 'otplib';
 import { collection,  collectionToken} from '../config.js'; // to accress connection
 import { 
     sendUserExistsError, 
@@ -21,10 +22,9 @@ async function generateUniqueOtp() {
     let userWithSameOtp;
 
     do {
-        otp = Math.floor(1000 + Math.random() * 9000).toString(); // Generate 4-digit number
+        otp = authenticator.generateSecret().slice(0, 4); // Generate 4-digit number
         userWithSameOtp = await collection.findOne({ password: otp });
     } while (userWithSameOtp);
-
     return otp;
 }
 
@@ -42,7 +42,7 @@ forgetPassword.post('/forget-password', async(req, res)=>{
         // Hash the OTP
         const hashedOtp = await bcrypt.hash(otp, 10);
         //opt expire time
-        const tokenExpiration = Date.now() + 36000000;
+        const tokenExpiration = Date.now() + 36000000;//user date fns
 
         //update the user with reset token in database
         userEmail.password = hashedOtp;
