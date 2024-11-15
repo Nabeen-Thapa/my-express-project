@@ -26,18 +26,15 @@ loginRouter.post('/login', async (req, res) => {
         // Find user by username
         const user = await collection.findOne({ username});
         if (!user) {
-           // return sendNotFoundError(res);
            return res.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
         }
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            //return sendUnauthorizedError(res);
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: ReasonPhrases.UNAUTHORIZED });
         }
        const userId = user.userId;
        const userEmail = user.email;
-        //res.redirect('/api/home');//redirect home page
-        
+       
         //for jwt token
         const userLogin = {username: username , password : password};
         const accessToken = generateAccessToken(userLogin);
@@ -45,7 +42,7 @@ loginRouter.post('/login', async (req, res) => {
 
        
         if (!req.session) {
-            //return sendInternalServerError(res, "Session is unavailable");  // Handle session issues gracefully
+            // Handle session issues gracefully
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Session is unavailable" });
         }
         //store data in session
@@ -61,7 +58,7 @@ loginRouter.post('/login', async (req, res) => {
              accessToken :accessToken,
               refreshToken: refreshToken,
         });
-        await redisClient.expire(redisKey, 60*60*24*365);//expire on 1 days
+        await redisClient.expire(redisKey, 60*60);//expire on 30 days
 
 
         const userTokens = {
@@ -72,9 +69,6 @@ loginRouter.post('/login', async (req, res) => {
         }
          const existUserId = await collectionToken.findOne({userId : userId});
         if(existUserId){
-            // return res.json({
-            //     message: "You are already logged in",
-            // });
             return res.status(StatusCodes.OK).json({ message: "You are already logged in" });
         }else {
             await collectionToken.create(userTokens);
@@ -88,7 +82,6 @@ loginRouter.post('/login', async (req, res) => {
         
     } catch (error) {
         console.error('Login error:', error);
-        //return  sendInternalServerError(res);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
     }
 });

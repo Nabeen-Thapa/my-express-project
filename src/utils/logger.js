@@ -1,3 +1,4 @@
+import { info } from 'console';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -41,9 +42,22 @@ export const logUserDetails = (userData) => {
 //for logger instate console.log
 import { createLogger, format, transports } from 'winston';
 
+const costumeLevels = {
+    levels:{
+        error : 0,
+        warn :1,
+        info: 2,
+
+    },  // Set default log level (e.g., 'info', 'warn',
+    colors :{
+        error : "red",
+        warn : "yellow",
+        info : "green"
+    } 
+}
+
 const logger = createLogger({
-    level: 'info',  // Set default log level (e.g., 'info', 'warn', 'error')
-    level1: 'error',
+    levels :costumeLevels.levels,
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),  // Timestamp format
         format.printf(({ timestamp, level, message}) => {
