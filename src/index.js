@@ -12,7 +12,11 @@ import apiRouter from './routers/api_routes.js';
 const app = express();
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { validateEnvAppPort } from './middleware/env_check.js';
-const apiRoute = express.Router();
+import corsRoute from './middleware/cors.js';
+app.use(cors());
+
+// const apiRoute = express.Router();
+// app.use(corsRoute);
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -22,21 +26,21 @@ app.use(express.urlencoded({ extended: false }));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Set view engine and views directory
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'ejs');
+// // Set view engine and views directory
+// app.set('views', path.join(__dirname, './views'));
+// app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-    res.render('login'); // Render login form
-});
+// app.get('/', (req, res) => {
+//     res.render('login'); // Render login form
+// });
 
-app.get('/register', (req, res) => {
-    res.render('register'); // Render register form
-});
+// app.get('/register', (req, res) => {
+//     res.render('register'); // Render register form
+// });
 
-app.get('/home', (req, res) => {
-    res.render('home'); // Render home form
-});
+// app.get('/home', (req, res) => {
+//     res.render('home'); // Render home form
+// });
 
 app.use(session({
     store: new RedisStore({ client: redisClient }), // Use Redis for session storage
