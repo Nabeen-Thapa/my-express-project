@@ -1,0 +1,42 @@
+2024-11-15 22:48:46 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:48:55 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:50:11 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:52:04 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:53:57 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:54:12 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+2024-11-15 22:54:36 [ERROR]: uncaughtException: customLevels is not defined
+ReferenceError: customLevels is not defined
+    at file:///E:/javascript%20learning/my-express-project/src/utils/logger.js:104:19
+    at ModuleJob.run (node:internal/modules/esm/module_job:262:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:482:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)

@@ -1,4 +1,4 @@
-import logger from './utils/logger.js'; // Import your logger utility
+import logger from '../utils/logger.js'; // Import your logger utility
 
 export const validateEnvAppPort = () => {
     const requiredVars = ['PORT'];
@@ -15,7 +15,6 @@ export const validateEnvAppPort = () => {
             message: errorMessage
         };
     }
-
     // Log a success message when validation passes
     logger.info('Environment variables validated successfully.');
 
